@@ -2,11 +2,9 @@ package com.example.webapp.storage;
 
 import com.example.webapp.model.Resume;
 
+import java.util.Arrays;
+
 public class SortedArrayStorage extends AbstractArrayStorage {
-    @Override
-    protected int getIndex(String uuid) {
-        return 0;
-    }
 
     @Override
     public void clear() {
@@ -31,5 +29,12 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
     public Resume[] getAll() {
         return new Resume[0];
+    }
+
+    @Override
+    protected int getIndex(String uuid) {
+        Resume searchKey = new Resume();
+        searchKey.setUuid(uuid);
+        return Arrays.binarySearch(storage, 0 , size, searchKey);
     }
 }
