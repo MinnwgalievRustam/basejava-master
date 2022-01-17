@@ -1,10 +1,12 @@
+package com.example.webapp.model;
+
 /**
  * Initial resume class
  */
 public class Resume {
 
     // Unique identifier
-    String uuid;
+    private String uuid;
 
 
     @Override

@@ -1,13 +1,17 @@
+package com.example.webapp.storage;
+
+import com.example.webapp.model.Resume;
+
 import java.util.Arrays;
 
 /**
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
+    private Resume[] storage = new Resume[10000];
     private int size = 0;
 
-    void clear() {
+    public void clear() {
         for (int i = 0; i < size; i++) {
             storage[i] = null;
         }
@@ -26,7 +30,7 @@ public class ArrayStorage {
 
 
 
-    void save(Resume r) {
+    public void save(Resume r) {
         int index = getIndex(r.getUuid());
         if (index != -1) {
             System.out.println("ERROR");
@@ -39,7 +43,7 @@ public class ArrayStorage {
     }
 
 
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index == -1) {
             System.out.println("ERROR");
@@ -48,7 +52,7 @@ public class ArrayStorage {
         return storage[index];
     }
 
-    void delete(String uuid) {
+    public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index == -1) {
             System.out.println("ERROR");
@@ -64,7 +68,7 @@ public class ArrayStorage {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
-    int size() {
+    public int size() {
         return size;
     }
 
