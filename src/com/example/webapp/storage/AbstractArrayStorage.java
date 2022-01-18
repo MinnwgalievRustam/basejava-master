@@ -16,13 +16,55 @@ public abstract class AbstractArrayStorage implements Storage {
     public int size() {
         return size;
     }
+
+    public void save(Resume r) {
+        int index = getIndex(r.getUuid());
+        if (index > 0) {
+            System.out.println("ERROR");
+        } else if (size == storage.length) {
+            System.out.println("ERROR LENGTH");
+        } else {
+            insertElement(r, index);
+            size ++;
+        }
+    }
+    public void delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index < 0) {
+            System.out.println("ERROR");
+        } else {
+            fillDeletedElement(index);
+            size--;
+        }
+    }
+
+    protected abstract void fillDeletedElement(int index);
+
+    protected abstract void insertElement(Resume r, int index);
+
     public Resume get(String uuid) {
         int index = getIndex(uuid);
-        if (index == -1) {
+        if (index < 0) {
             System.out.println("ERROR");
             return null;
         }
         return storage[index];
+    }
+    public void clear() {
+        Arrays.fill(storage, 0, size, null);
+        size = 0;
+    }
+
+    public void update(Resume r) {
+        int index = getIndex(r.getUuid());
+        if (index < 0) {
+            System.out.println("ERROR");
+        } else {
+            storage[index] = r;
+        }
+    }
+    public Resume[] getAll() {
+        return Arrays.copyOfRange(storage, 0, size);
     }
 
     protected abstract int getIndex(String uuid);
