@@ -1,5 +1,8 @@
 package com.example.webapp.storage;
 
+import com.example.webapp.exception.ExistStorageException;
+import com.example.webapp.exception.NotExistStorageException;
+import com.example.webapp.exception.StorageException;
 import com.example.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -20,18 +23,19 @@ public abstract class AbstractArrayStorage implements Storage {
     public void save(Resume r) {
         int index = getIndex(r.getUuid());
         if (index > 0) {
-            System.out.println("ERROR");
+            throw new ExistStorageException(r.getUuid());
         } else if (size == storage.length) {
-            System.out.println("ERROR LENGTH");
+            throw new StorageException("Storage overflow", r.getUuid());
         } else {
             insertElement(r, index);
-            size ++;
+            size++;
         }
     }
+
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("ERROR");
+            throw new NotExistStorageException(uuid);
         } else {
             fillDeletedElement(index);
             size--;
@@ -45,11 +49,11 @@ public abstract class AbstractArrayStorage implements Storage {
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("ERROR");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
+
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
@@ -58,11 +62,12 @@ public abstract class AbstractArrayStorage implements Storage {
     public void update(Resume r) {
         int index = getIndex(r.getUuid());
         if (index < 0) {
-            System.out.println("ERROR");
+            throw new NotExistStorageException(r.getUuid());
         } else {
             storage[index] = r;
         }
     }
+
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
     }
