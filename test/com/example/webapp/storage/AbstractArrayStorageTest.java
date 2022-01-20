@@ -12,8 +12,8 @@ import static org.junit.Assert.*;
 
 public abstract class AbstractArrayStorageTest {
 
-    private static final int STORAGE_LIMIT = 100_000;
-    private Storage storage = new ArrayStorage();
+
+    private Storage storage;
     private static final String UUID_1 = "uuid1";
     private static final Resume RESUME_1 = new Resume(UUID_1);
     private static final String UUID_2 = "uuid2";
@@ -89,7 +89,7 @@ public abstract class AbstractArrayStorageTest {
     @Test
     public void update() {
         Resume newResume = new Resume(UUID_1);
-        storage.save(newResume);
+        storage.update(newResume);
         assertTrue(newResume == storage.get(UUID_1));
 
     }
