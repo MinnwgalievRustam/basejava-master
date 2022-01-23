@@ -10,7 +10,7 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 10000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -20,38 +20,37 @@ public abstract class AbstractArrayStorage implements Storage {
         return size;
     }
 
-    public void save(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index >= 0) {
-            throw new ExistStorageException(r.getUuid());
-        } else if (size == storage.length) {
+    @Override
+    protected void doSave(Resume r, Object searchKey) {
+          if (size == STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         } else {
-            insertElement(r, index);
+            insertElement(r, (Integer) searchKey);
             size++;
         }
+
     }
 
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            fillDeletedElement(index);
-            size--;
-        }
+    @Override
+    protected void doDelete(Object searchKey) {
+        fillDeletedElement((Integer) searchKey);
+        storage[size - 1] = null;
+        size--;
     }
 
     protected abstract void fillDeletedElement(int index);
 
     protected abstract void insertElement(Resume r, int index);
 
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return storage[index];
+    @Override
+    protected Resume doGet(Object searchKey) {
+        return storage[(Integer) searchKey];
+    }
+
+
+    @Override
+    protected void doUpdate(Resume r, Object searchKey) {
+        storage[(Integer) searchKey] = r;
     }
 
     public void clear() {
@@ -59,19 +58,16 @@ public abstract class AbstractArrayStorage implements Storage {
         size = 0;
     }
 
-    public void update(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(r.getUuid());
-        } else {
-            storage[index] = r;
-        }
-    }
 
     public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
-    protected abstract int getIndex(String uuid);
+    protected abstract Integer getSearchKey(String uuid);
 
+
+    @Override
+    protected boolean isExist(Object searchKey) {
+        return (Integer)searchKey >= 0;
+    }
 }
