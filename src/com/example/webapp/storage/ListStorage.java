@@ -44,14 +44,15 @@ public class ListStorage extends AbstractStorage{
         list.set((Integer) searchKey, r);
     }
 
+
     @Override
     public void clear() {
         list.clear();
     }
 
     @Override
-    public Resume[] getAll() {
-        return  list.toArray(new Resume[list.size()]);
+    public List<Resume> doCopyAll() {
+        return  new ArrayList<>(list);
     }
 
     @Override
